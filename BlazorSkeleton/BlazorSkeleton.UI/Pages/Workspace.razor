@@ -1,0 +1,35 @@
+@page "/workspace"
+
+<PageTitle>@Constants.ApplicationName</PageTitle>
+
+<div class="container-fluid mh-100">
+    <div class="col bg-white">
+        <div class="row p-2">
+            <RadzenTabs class="m-auto" TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Server" Change="@OnTabChange" SelectedIndex="selectedIndex">
+                <Tabs>
+                    <RadzenTabsItem Text="@Constants.ExampleGroupName">
+                        @if (selectedIndex == 0)
+                        {
+                            @if (HasExampleAccess)
+                            {
+                                <ExampleTab />
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning m-3">You do not have permission to access @Constants.ExampleGroupName.</div>
+                            }
+                        }
+                    </RadzenTabsItem>
+
+                    @*
+                        Add a tab per feature. Pattern:
+                        1. Components/Tabs/<Feature>/<Feature>.razor (+ .razor.cs)
+                        2. CanAccess<Feature> in IPermissionService / PermissionService
+                        3. A RadzenTabsItem here gated on selectedIndex and the permission
+                        4. Nested sub-tabs: another RadzenTabs with its own selected index
+                    *@
+                </Tabs>
+            </RadzenTabs>
+        </div>
+    </div>
+</div>

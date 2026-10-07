@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <!-- Razor class library: pages, layout, components and the main static assets (wwwroot).
+       Assets are served to the browser from _content/BlazorSkeleton.UI/... -->
+
+  <PropertyGroup>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" />
+    <PackageReference Include="Radzen.Blazor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorSkeleton.Data\BlazorSkeleton.Data.csproj" />
+  </ItemGroup>
+
+</Project>

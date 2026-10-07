@@ -1,0 +1,20 @@
+<div class="container-fluid">
+    <div class="row mb-2 align-items-center">
+        <div class="col">
+            <RadzenLabel Text="@Constants.ExampleGroupName" class="font-weight-bold" />
+        </div>
+        <div class="col-auto">
+            <RadzenButton Text="Load" Icon="refresh" BusyText="Loading. Please wait" IsBusy="@isLoading" Click="@LoadAsync" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <BasicDataGrid TItem="ExampleItem" Title="Example Items" Data="@items" IsLoading="@isLoading" ExportFilePrefix="ExampleItems">
+                <Columns>
+                    <RadzenDataGridColumn TItem="ExampleItem" Property="ID" Title="ID" Width="120px" />
+                    <RadzenDataGridColumn TItem="ExampleItem" Property="NAME" Title="Name" />
+                </Columns>
+            </BasicDataGrid>
+        </div>
+    </div>
+</div>

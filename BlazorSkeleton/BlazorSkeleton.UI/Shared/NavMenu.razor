@@ -1,0 +1,11 @@
+<style>
+    .active-page {
+        font-weight: bold;
+        text-decoration-line: underline;
+    }
+</style>
+
+<RadzenMenu class="justify-content-around">
+    <RadzenMenuItem Text="Home" Path="/" class="@(AppState?.PagePath == "" ? "active-page" : "")" Click="@(() => NavigateTo(""))" />
+    <RadzenMenuItem Text="Workspace" Path="/workspace" class="@(AppState?.PagePath == "workspace" ? "active-page" : "")" Click="@(() => NavigateTo("workspace"))" />
+</RadzenMenu>

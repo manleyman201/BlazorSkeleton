@@ -1,0 +1,45 @@
+@inherits LayoutComponentBase
+
+<RadzenDialog />
+<RadzenContextMenu />
+<RadzenNotification />
+<RadzenTooltip />
+
+<PageTitle>@Constants.ApplicationName</PageTitle>
+
+<div class="page">
+    <RadzenLayout class="w-100">
+        <RadzenHeader>
+            @if (ShowEnvironmentBanner)
+            {
+                <EnvironmentBanner />
+            }
+            <div class="row justify-content-between align-items-center">
+                <div class="col-2 d-flex align-items-center">
+                    @* <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Click="@(args => OpenFilterDialog())" Icon="filter_alt" class="ms-2 me-3" /> *@
+                    <RadzenImage Path="images/Sprouts_Logo.png" Style="height: 4rem; padding: 0.5rem;" />
+                </div>
+                <div class="col-4">
+                    @*Uncomment for multi-page apps*@
+                    @* <NavMenu /> *@
+                </div>
+                <div class="col-2 align-items-center">
+                    <LoginDisplay />
+                </div>
+            </div>
+        </RadzenHeader>
+        <RadzenBody class="mb-2">
+            <div class="text-center app-name">
+                @Constants.ApplicationName
+            </div>
+            <div class="h-100 p-2">
+                @Body
+            </div>
+        </RadzenBody>
+        <RadzenFooter>
+            <div class="float-end">
+                Build Date: @Constants.LastBuildDate
+            </div>
+        </RadzenFooter>
+    </RadzenLayout>
+</div>

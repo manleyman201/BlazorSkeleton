@@ -1,0 +1,84 @@
+# ===========================================================
+# nuget-project-build-scd.yml - Project-specific settings only
+# ===========================================================
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - refs/heads/master
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: Common.Utility
+      ref: refs/heads/master
+
+pool:
+  name: Sprouts Common Agent Pool
+  demands: msbuild
+
+# ---- Project-specific knobs (only edit here) ----
+variables:
+  # Which solution and which project to publish
+  - name: SolutionPath
+    value: '**/*.sln'
+  - name: WebProject
+    value: '**/BlazorSkeleton.Server.csproj'
+
+  # .NET major (e.g. 8.0.x or 10.0.x) and build config
+  - name: DotNetVersion
+    value: '10.0.x'
+  - name: BuildConfiguration
+    value: 'Release'
+
+  # Publish mode toggle: 'true' = SCD, 'false' = FDD
+  - name: UseSCDTemplate
+    value: 'true'
+
+  # Runtime when SCD=true (use linux-x64 for Linux apps)
+  - name: PublishRid
+    value: 'win-x64'
+
+  # Artifact & feed
+  - name: ArtifactName
+    value: 'drop'
+
+  # Optional: NuGet tool pin (can leave as-is)
+  - name: NuGetVersion
+    value: '5.8.1'
+   
+  - name: BuildParameters.solution
+    value: '**\*.sln'
+
+  - group: Common Build Variables
+  - name: SFMPackageVersion
+    value: '$(MajorVersion).$(MinorVersion).$(Build.BuildId)'  
+
+  #Versioning
+  - name: BuildParameters.solution
+    value: '**\*.sln'
+ 
+  - group: Common Build Variables
+  - name: SFMPackageVersion
+    value: '$(MajorVersion).$(MinorVersion).$(Build.BuildId)' 
+
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: BuildAndPackage
+    displayName: Build & Package
+    steps:
+      - template: "Build Templates/Blazor-Build-Template-SCD.yml@templates"
+        parameters:
+          # pass through project specifics
+          solutionPath: '$(SolutionPath)'
+          webProject: '$(WebProject)'
+          dotnetVersion: '$(DotNetVersion)'
+          buildConfiguration: '$(BuildConfiguration)'
+          useSCDTemplate: ${{ eq(variables['UseSCDTemplate'], 'true') }}
+          publishRid: '$(PublishRid)'
+          artifactName: '$(ArtifactName)'
+          nugetVersion: '$(NuGetVersion)'

@@ -1,0 +1,62 @@
+trigger: none
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: Common.Utility
+      ref: refs/heads/master
+
+pool:
+  name: Sprouts Common Agent Pool
+  demands: msbuild
+
+variables:
+  - name: BuildParameters.solution
+    value: '**\*.sln'
+  - group: Common Build Variables
+  - name: SFMPackageVersion
+    value: '$(MajorVersion).$(MinorVersion).$(Build.BuildId)'  
+    
+stages:
+  - stage: Build
+    displayName: Scan and Build stage
+    jobs:
+      - job: BuildJob
+        steps: 
+
+          # 1) Restore, build, and publish the Blazor app using a shared pipeline template
+          - template: Build Templates/DNX-BlazorApp.yml@templates
+            parameters:
+              solutionPath: '**\*.sln'                           # Targets all solution files recursively
+              dotnetVersion: '10.x'                              # Ensures .NET 10 SDK is used
+              buildConfiguration: ${{ variables.BuildConfiguration }}  # Typically 'Release' or 'Debug'
+              artifactName: 'BlazorSkeletonBlazor'               # Output artifact name                    
+
+          # 2) Run xUnit tests and collect code coverage in Cobertura format
+          - task: DotNetCoreCLI@2
+            displayName: Run Tests & Collect Coverage
+            inputs:
+              command: test
+              projects: '**/BlazorSkeleton.Test/BlazorSkeleton.Test.csproj'   # Target test project(s)
+              arguments: >
+                --configuration $(BuildConfiguration)
+                --collect:"XPlat Code Coverage"
+                -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+                --logger:"trx;LogFileName=TestResults.trx"
+
+          # 3) Publish test results to Azure DevOps test tab
+          - task: PublishTestResults@2
+            displayName: Publish Test Results
+            inputs:
+              testRunner: VSTest
+              testResultsFiles: '$(Agent.TempDirectory)/*.trx'     # Matches TRX file emitted by xUnit
+              failTaskOnFailedTests: true                           # Fails build if any tests fail
+
+          # 4) Publish Cobertura coverage report to DevOps build summary
+          - task: PublishCodeCoverageResults@1
+            displayName: Publish Code Coverage
+            inputs:
+              codeCoverageTool: Cobertura
+              summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+              # reportDirectory: '$(System.DefaultWorkingDirectory)/**/TestResults'

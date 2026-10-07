@@ -1,0 +1,26 @@
+{
+  "Serilog": {
+    "Using": [
+      "Serilog.Sinks.File",
+      "Serilog.Enrichers.Thread"
+    ],
+    "MinimumLevel": "Information",
+    "Enrich": [
+      "WithMachineName",
+      "WithProcessId",
+      "WithThreadId",
+      "WithCorrelationId",
+      "FromLogContext"
+    ],
+    "WriteTo": [
+      {
+        "Name": "File",
+        "Args": {
+          "path": "bin\\logs\\AppLogs_Main.log",
+          "outputTemplate": "{Timestamp:yyyyMMdd HH:mm:ss.fff} ({SourceContext}) [{Level}] {MachineName} {ProcessId} {CorrelationId} {ThreadId} {Message} {NewLine} {Exception}",
+          "rollingInterval": "Day"
+        }
+      }
+    ]
+  }
+}

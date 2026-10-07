@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Non-UI library: models, SQL providers, services, state and utilities.
+       Everything here is registered for dependency injection in BlazorSkeleton.Server/Program.cs. -->
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+
+  <!-- Stamps the real build time into the assembly (read by Constants.LastBuildDate). -->
+  <ItemGroup>
+    <AssemblyMetadata Include="BuildDate" Value="$([System.DateTime]::Now.ToString('MM/dd/yyyy HH:mm:ss'))" />
+  </ItemGroup>
+
+</Project>
