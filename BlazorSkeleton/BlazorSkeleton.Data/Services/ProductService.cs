@@ -15,6 +15,15 @@ namespace BlazorSkeleton.Data.Services
 
             return products;
         }
+
+        public async Task<int> SaveProductAsync(Product product)
+        {
+            //validate product does not exist
+
+            var mockSavedObject = new Product();
+            mockSavedObject = product;
+            return 199;
+        }
     }
 
 

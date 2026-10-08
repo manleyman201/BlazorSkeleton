@@ -15,12 +15,14 @@ namespace BlazorSkeleton.Server.Controllers
         private readonly IOrderService _orderService;
         private readonly ILogger<OrdersController> _logger;
         private readonly ICustomerService _customerService;
+        private readonly IProductService _productService;
 
-        public OrdersController(IOrderService orderService, ILogger<OrdersController> logger, ICustomerService customerService)
+        public OrdersController(IOrderService orderService, ILogger<OrdersController> logger, ICustomerService customerService, IProductService productService)
         {
             _orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             _customerService = customerService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _productService = productService;
         }
 
         // GET api/orders
@@ -76,8 +78,14 @@ namespace BlazorSkeleton.Server.Controllers
             var saveOrder = await _orderService.SaveOrder(order);
             return Ok("Succesfully Saved");
         }
-        
 
+        [HttpPost]
+        [Route("SaveProductAsync")]
+        public async Task<ActionResult> SaveProductAsync([FromBody] Product product) 
+        {
+            var productId = _productService.SaveProductAsync(product);
+            return Ok(productId);
+        }
 
     }
 }

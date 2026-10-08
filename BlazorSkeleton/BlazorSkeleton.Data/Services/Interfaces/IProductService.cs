@@ -8,5 +8,6 @@ namespace BlazorSkeleton.Data.Services.Interfaces
     public interface IProductService
     {
         Task<List<Product>> GetProductsAsync();
+        Task<int> SaveProductAsync(Product product);
     }
 }
